@@ -188,8 +188,8 @@ class BoardController:
 		can_move: bool = True
 		while (first_non_empty_row < self.board.height) and can_move:  # we iterate through columns from top to bottom
 
-			if self.board.is_row_empty(first_non_empty_row):  # if current row is empty go row below
-				if can_move and (first_non_empty_row + 1 < self.board.height):
+			if columns.is_row_empty(first_non_empty_row):  # if current row is empty go row below
+				if can_move and (first_non_empty_row + 1 <= self.board.height):
 					first_non_empty_row += 1
 					continue
 				else:
