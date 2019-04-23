@@ -1,7 +1,8 @@
 from board import BoardController
 
 bc = BoardController()
-
+bc.board.set(2, 19, 1)
+bc.board.set(2, 18, 1)
 # for x in range(bc.board.width):
 # 	bc.board.set(x, 3, 3)
 #

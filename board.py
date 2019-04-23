@@ -210,6 +210,9 @@ class BoardController:
 						else:
 							can_move = False
 
+				if can_move:
+					first_non_empty_row += 1  # add one row since we are moving one up
+
 			if can_move:
 				first_non_empty_row += 1
 
