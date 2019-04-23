@@ -189,17 +189,20 @@ class BoardController:
 		while (first_non_empty_row < self.board.height) and can_move:  # we iterate through columns from top to bottom
 
 			if self.board.is_row_empty(first_non_empty_row):  # if current row is empty go row below
-				first_non_empty_row += 1
-				continue
+				if can_move and (first_non_empty_row + 1 < self.board.height):
+					first_non_empty_row += 1
+					continue
+				else:
+					break
 			elif self.board.is_row_fully_occupied(first_non_empty_row):
 				break
 
 			for y in range((tetromino.height - 1), -1, -1):  # iterate through tetromino from bottom to top
-				if not can_move:
+				if not can_move or not (first_non_empty_row < self.board.height):
 					break
 
 				for x in range(tetromino.width):  # iterate through tetromino from left to right
-					if not can_move:
+					if not can_move or not (first_non_empty_row < self.board.height):
 						break
 
 					if tetromino.get(x, y) == 0:
@@ -210,10 +213,14 @@ class BoardController:
 						else:
 							can_move = False
 
-				if can_move:
+				if can_move and (first_non_empty_row + 1 <= self.board.height):
 					first_non_empty_row += 1  # add one row since we are moving one up
+				else:
+					break
 
-			if can_move:
+			if can_move and (first_non_empty_row + 1 <= self.board.height):
 				first_non_empty_row += 1
+			else:
+				break
 
 		return first_non_empty_row - 1
