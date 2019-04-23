@@ -109,6 +109,7 @@ class Board:
 			object.
 		:return: Board object representing first two rows with tetrominoes
 		"""
+
 		top_row = 0
 		end = False
 
@@ -124,13 +125,31 @@ class Board:
 
 		return Board(matrix=self.matrix[top_row:(top_row + 2), :])
 
+	def is_top_row_empty(self):
+		"""
+		Checks if upper (first) row is empty
+		:return: True - is empty / False - isn't empty
+		"""
 
-class BoardController:
+		is_empty = True
+
+		for x in range(self.width):
+			if self.get(x, 0) != 0:
+				is_empty = False
+
+		return is_empty
+
+
+class GameController:
+	# TODO: counting score and taking care of game may be moved to separate class (change this to BoardController and
+	#   create other GameController)
 
 	# TODO: check if new tetromino is not added to non-existing rows (above board)
 	# TODO: get top 2 rows
 	def __init__(self):
 		self.board = Board()
+		self.is_game_over = False
+		self.score = 0
 
 	def remove_full_rows(self):
 		"""
@@ -152,6 +171,8 @@ class BoardController:
 			if is_full:
 				self.board.remove_row_and_add_empty(y)
 				removed_rows += 1
+
+		self.score += removed_rows
 
 		return removed_rows
 
@@ -177,6 +198,9 @@ class BoardController:
 			x_position = 0
 
 		self.__place_tetromino(tetromino, x_position)
+
+		if not self.board.is_top_row_empty():
+			self.is_game_over = True  # TODO: this is really primitive and can/should be changed
 
 	def __place_tetromino(self, tetromino: Tetromino, x_position):
 		"""
