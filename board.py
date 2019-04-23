@@ -104,6 +104,11 @@ class Board:
 		return full_rows
 
 	def get_top_two_rows(self):
+		"""
+		This method finds first two rows in which tetrominoes occur (looking from top) and returns them as new Board
+			object.
+		:return: Board object representing first two rows with tetrominoes
+		"""
 		top_row = 0
 		end = False
 
