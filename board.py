@@ -103,6 +103,22 @@ class Board:
 
 		return full_rows
 
+	def get_top_two_rows(self):
+		top_row = 0
+		end = False
+
+		for y in range(self.height):
+			for x in range(self.width):
+				if self.get(x, y) != 0:
+					top_row = y
+					end = True
+					break
+
+			if end:
+				break
+
+		return Board(matrix=self.matrix[top_row:(top_row + 2), :])
+
 
 class BoardController:
 

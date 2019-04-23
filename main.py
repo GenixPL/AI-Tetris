@@ -27,13 +27,21 @@ bc = BoardController()
 # bc.add_tetromino(5, 1, 0)
 #
 # # bc.board.print()
-# bc.add_tetromino(1, 0, 5)
+bc.add_tetromino(1, 0, 5)
+bc.add_tetromino(2, 3, 5)
 # bc.board.print()
 
-while True:
-	tetro = randint(0, 6)
-	rot = randint(0, 3)
-	pos = randint(0, 9)
-	bc.add_tetromino(tetro, rot, pos)
-	bc.board.print()
-	input()
+bc.board.print()
+print("top two")
+bc.board.get_top_two_rows().print()
+
+
+
+
+# while True:
+# 	tetro = randint(0, 6)
+# 	rot = randint(0, 3)
+# 	pos = randint(0, 9)
+# 	bc.add_tetromino(tetro, rot, pos)
+# 	bc.board.print()
+# 	input()
