@@ -1,4 +1,5 @@
 from numpy import array
+from random import randint
 
 shapes = [  # Define the shapes of the single parts
 	array([  # 0
@@ -38,6 +39,11 @@ shapes = [  # Define the shapes of the single parts
 
 
 class Tetromino:
+
+	@classmethod
+	def get_random(cls):
+		num = randint(0, 6)
+		return Tetromino(num)
 
 	def __init__(self, shape_num):
 		self.shape = shapes[shape_num].copy()

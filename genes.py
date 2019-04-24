@@ -1,7 +1,9 @@
 from bitstring import BitArray
+from random import randint
+from file_functions import read_from_file
 
 
-class GeneController:
+class Gene:
 	"""
 	This class is responsible for abstracting and taking care of genes.
 
@@ -34,8 +36,18 @@ class GeneController:
 	positions_bits: int = 4  # number of bits needed to encode possible positions
 	situation_bits: int = (rotations_bits + positions_bits) * tetrominoes_num
 
-	def __init__(self):
-		self.gene = BitArray(self.situation_bits * self.situations_num)
+	def __init__(self, random=False, file=None):
+		len = self.situation_bits * self.situations_num
+
+		if file is not None:
+			data = read_from_file(file)
+			init = int(data, 16)
+			self.gene = BitArray(uint=init, length=len)
+		elif random:
+			init = randint(0, 2**44040192 - 1)
+			self.gene = BitArray(length=len, uint=init)
+		else:
+			self.gene = BitArray(length=len)
 
 	def get_situation_genes(self, situation_bit_array: BitArray):
 		situation_int = situation_bit_array.uint
@@ -55,9 +67,7 @@ class GeneController:
 		starting_point = (self.rotations_bits + self.positions_bits) * tetromino_num + 2
 		ending_point = starting_point + 4
 
-		return situation_genes[starting_point:ending_point].uint
+		return situation_genes[starting_point:ending_point].uint % self.positions_num
 
 	def get_index_for_situation_and_tetromino(self, situation: int, tetromino: int):
 		return (situation * self.situation_bits) + (tetromino * (self.rotations_bits + self.positions_bits))
-
-
