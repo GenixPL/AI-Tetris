@@ -123,6 +123,9 @@ class Board:
 			if end:
 				break
 
+		if top_row == self.height - 1:
+			top_row = self.height - 2
+
 		return Board(matrix=self.matrix[top_row:(top_row + 2), :])
 
 	def is_top_row_empty(self):
