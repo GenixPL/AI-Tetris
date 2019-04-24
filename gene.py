@@ -1,6 +1,7 @@
 from bitstring import BitArray
 from random import randint
 from file_functions import read_from_file
+from tetromino import Tetromino
 
 
 class Gene:
@@ -36,38 +37,47 @@ class Gene:
 	positions_bits: int = 4  # number of bits needed to encode possible positions
 	situation_bits: int = (rotations_bits + positions_bits) * tetrominoes_num
 
-	def __init__(self, random=False, file=None):
-		len = self.situation_bits * self.situations_num
+	GENE_LEN = situation_bits * situations_num
 
-		if file is not None:
-			data = read_from_file(file)
-			init = int(data, 16)
-			self.gene = BitArray(uint=init, length=len)
-		elif random:
-			init = randint(0, 2**44040192 - 1)
-			self.gene = BitArray(length=len, uint=init)
-		else:
-			self.gene = BitArray(length=len)
+	@classmethod
+	def get_random(cls):
+		new = Gene()
+		init = randint(0, 2**44040192 - 1)
+		new.gene = BitArray(uint=init, length=cls.GENE_LEN)
 
-	def get_situation_genes(self, situation_bit_array: BitArray):
-		situation_int = situation_bit_array.uint
+		return new
+
+	@classmethod
+	def from_file(cls, file):
+		new = Gene()
+		data = read_from_file(file)
+		init = int(data, 16)
+		new.gene = BitArray(uint=init, length=cls.GENE_LEN)
+
+		return new
+
+	def __init__(self):
+		self.gene = BitArray(length=self.GENE_LEN)
+
+	def get_reactions(self, situation: BitArray):
+		situation_int = situation.uint
 
 		starting_point = situation_int * self.situation_bits
 		ending_point = starting_point + self.situation_bits
 
 		return self.gene[starting_point:ending_point]
 
-	def get_rotations_num_for_situation_and_tetromino(self, situation_genes: BitArray, tetromino_num):
-		starting_point = (self.rotations_bits + self.positions_bits) * tetromino_num
+	def get_rotations(self, reactions: BitArray, tetromino: Tetromino):
+		starting_point = (self.rotations_bits + self.positions_bits) * tetromino.shape_num
 		ending_point = starting_point + 2
 
-		return situation_genes[starting_point:ending_point].uint
+		return reactions[starting_point:ending_point].uint
 
-	def get_position_for_situation_and_tetromino(self, situation_genes: BitArray, tetromino_num):
-		starting_point = (self.rotations_bits + self.positions_bits) * tetromino_num + 2
+	def get_position(self, reactions: BitArray, tetromino: Tetromino):
+		starting_point = (self.rotations_bits + self.positions_bits) * tetromino.shape_num + 2
 		ending_point = starting_point + 4
 
-		return situation_genes[starting_point:ending_point].uint % self.positions_num
+		return reactions[starting_point:ending_point].uint % self.positions_num
 
 	def get_index_for_situation_and_tetromino(self, situation: int, tetromino: int):
 		return (situation * self.situation_bits) + (tetromino * (self.rotations_bits + self.positions_bits))

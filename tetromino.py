@@ -47,13 +47,21 @@ class Tetromino:
 
 	def __init__(self, shape_num):
 		self.shape = shapes[shape_num].copy()
+		self.shape_num = shape_num
 		self.width = len(self.shape[0])
 		self.height = len(self.shape)
 
-	def rotate_clockwise(self):
-		self.shape = [[self.shape[y][x] for y in range(self.height)] for x in range(self.width - 1, -1, -1)]
-		self.width = len(self.shape[0])
-		self.height = len(self.shape)
+	def rotate(self, times=1):
+		"""
+		Rotates tetromino (clockwise)
+
+		:param times: number of times tetromino will be rotated
+		"""
+
+		for i in range(times):
+			self.shape = [[self.shape[y][x] for y in range(self.height)] for x in range(self.width - 1, -1, -1)]
+			self.width = len(self.shape[0])
+			self.height = len(self.shape)
 
 	def get(self, pos_x, pos_y):
 		return self.shape[pos_y][pos_x]

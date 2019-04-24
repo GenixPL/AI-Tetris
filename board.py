@@ -1,213 +1,138 @@
-from tetrominoes import Tetromino
-import numpy as np
+from tetromino import Tetromino
+from numpy import zeros
+from two_dim_array import TwoDimArray
 
 
 class Board:
 	"""
-	This class represents Tetris board. It can also be used to handle board sub parts
+	This class represents Tetris board.
 	[0][0] coordinate represents upper left corner
-	TODO: if someone is bored, this can be moved to separate class and interface can be created
-
-	"set" and "get" methods have been crated in order to be able to abstract
-		matrix notation ([row, col]) to (x, y) notation
 	"""
 
-	def __init__(self, matrix=None, width=10, height=20):
-		# width = 10 and height = 20 are standard Tetris board sizes
-		if matrix is None:
-			self.matrix = np.zeros([height, width], dtype=int)
-			self.width = width
-			self.height = height
+	WIDTH = 10
+	HEIGHT = 20
 
-		else:
-			self.matrix = matrix
-			self.width = len(matrix[0])
-			self.height = len(matrix)
-
-	def print(self):
-		for y in range(self.height):
-			print(str(y) + "\t" + str(self.matrix[y]))
-
-	def set(self, pos_x, pos_y, value):
-		self.matrix[pos_y][pos_x] = value
-
-	def get(self, pos_x, pos_y):
-		return self.matrix[pos_y][pos_x]
-
-	def remove_row_and_add_empty(self, row_num):
-		for i in range(row_num, -1, -1):
-			if i == 0:
-				self.matrix[i] = np.zeros(self.width, dtype=int)
-			else:
-				self.matrix[i] = self.matrix[i - 1]
-
-	def get_columns(self, first_col, last_col):
+	def __init__(self):
 		"""
-		Returns columns from first to last (excluding)
-		:param first_col: first column to take
-		:param last_col: last column to take
-		:return: Board object representing given columns
+		Creates empty matrix with proper width and height
 		"""
+		self.matrix = TwoDimArray(self.WIDTH, self.HEIGHT)
 
-		return Board(matrix=self.matrix[:, first_col:last_col])
-
-	def is_row_empty(self, row_num):
+	def remove_full_rows_and_return_count(self):
 		"""
-		Checks if given row is empty
-		:param row_num: index of row to check
-		:return: True - row is empty / False - row isn't empty
+		Removes full rows and adds empty rows at the top
+
+		:return: number of removed rows
 		"""
+		removed_rows = 0
 
-		is_row_empty = True
-		for x in range(self.width):
-			if self.get(x, row_num) != 0:
-				is_row_empty = False
-				break
-
-		return is_row_empty
-
-	def is_row_fully_occupied(self, row_num):
-		"""
-		Checks if given row is fully occupied
-		:param row_num: index of row to check
-		:return: True - row is fully occupied / False - row isn't fully occupied
-		"""
-
-		is_row_occupied = True
-		for x in range(self.width):
-			if self.get(x, row_num) == 0:
-				is_row_occupied = False
-				break
-
-		return is_row_occupied
-
-	def get_num_of_full_rows(self):
-		"""
-		Returns number of full rows
-		:return: number of full rows
-		"""
-		full_rows = 0
-
-		for y in range(self.height):
+		for y in range(self.HEIGHT):
 			is_full = True
 
-			for x in range(self.width):
-				if self.get(x, y) == 0:
+			for x in range(self.WIDTH):
+				if self.matrix.get(x, y) != 0:
+					continue
+				else:
 					is_full = False
 					break
-				else:
-					continue
 
 			if is_full:
-				full_rows += 1
+				self.__remove_row(y)
+				removed_rows += 1
 
-		return full_rows
+		return removed_rows
 
 	def get_top_two_rows(self):
 		"""
-		This method finds first two rows in which tetrominoes occur (looking from top) and returns them as new Board
-			object.
-		:return: Board object representing first two rows with tetrominoes
+		This method finds first two rows in which tetrominoes occur (looking from top) and returns them
+
+		:return: TwoDimArray object representing first two rows with tetrominoes
 		"""
 
 		top_row = 0
-		end = False
+		has_found = False
 
-		for y in range(self.height):
-			for x in range(self.width):
-				if self.get(x, y) != 0:
+		for y in range(self.HEIGHT):
+			for x in range(self.WIDTH):
+				if self.matrix.get(x, y) != 0:
 					top_row = y
-					end = True
+					has_found = True
 					break
 
-			if end:
+			if has_found:
 				break
 
-		if top_row == self.height - 1:
-			top_row = self.height - 2
+		if top_row == self.HEIGHT - 1:
+			top_row = self.HEIGHT - 2
 
-		return Board(matrix=self.matrix[top_row:(top_row + 2), :])
+		return self.matrix.get_rows(top_row, top_row + 2)
 
 	def is_top_row_empty(self):
 		"""
 		Checks if upper (first) row is empty
+
 		:return: True - is empty / False - isn't empty
 		"""
 
 		is_empty = True
 
-		for x in range(self.width):
-			if self.get(x, 0) != 0:
+		for x in range(self.WIDTH):
+			if self.matrix.get(x, 0) != 0:
 				is_empty = False
 
 		return is_empty
 
-
-class GameController:
-	# TODO: counting score and taking care of game may be moved to separate class (change this to BoardController and
-	#   create other GameController)
-
-	# TODO: check if new tetromino is not added to non-existing rows (above board)
-	# TODO: get top 2 rows
-	def __init__(self):
-		self.board = Board()
-		self.is_game_over = False
-		self.score = 0
-
-	def remove_full_rows(self):
-		"""
-		Removes full rows and adds empty rows at the top
-		:return: number of removed rows
-		"""
-		removed_rows = 0
-
-		for y in range(self.board.height):
-			is_full = True
-
-			for x in range(self.board.width):
-				if self.board.get(x, y) != 0:
-					continue
-				else:
-					is_full = False
-					break
-
-			if is_full:
-				self.board.remove_row_and_add_empty(y)
-				removed_rows += 1
-
-		self.score += removed_rows
-
-		return removed_rows
-
-	def add_tetromino(self, shape_num, rotations_num, x_position):
+	def add_tetromino(self, tetromino: Tetromino, x_position):
 		"""
 		Places new tetromino on board.
 
-		:param shape_num: index for tetrominoes.shapes <0,6>
-		:param rotations_num: number of rotations for given tetromino <0,3>
+		:param tetromino: tetromino which will be placed
 		:param x_position: index of column for tetromino's first block (from left) <0,9>
 			(if it doesn't fit it will be move to the left)
 		:return:
 		"""
 
-		tetromino = Tetromino(shape_num)  # get tetromino with given shape
-
-		for i in range(rotations_num):  # rotate given tetromino given number of times
-			tetromino.rotate_clockwise()
-
-		if (x_position + (tetromino.width - 1)) >= self.board.width:  # we are outside the board bounds (right)
-			x_position = self.board.width - 1 - (tetromino.width - 1)
+		if (x_position + (tetromino.width - 1)) >= self.WIDTH:  # we are outside the board bounds (right)
+			x_position = self.WIDTH - 1 - (tetromino.width - 1)
 		elif x_position < 0:  # we are outside the board bounds (left)
 			x_position = 0
 
 		self.__place_tetromino(tetromino, x_position)
 
-		if not self.board.is_top_row_empty():
-			self.is_game_over = True  # TODO: this is really primitive and can/should be changed
+	def print(self):
+		self.matrix.print()
+
+	def __remove_row(self, row_num):
+		"""
+		Removes specified row, lowers each row from above, and adds new empty row on top
+		:param row_num: index of row which will be removed
+		"""
+
+		for i in range(row_num, -1, -1):
+			if i == 0:
+				self.matrix.set_row(i, zeros(self.WIDTH, dtype=int))
+			else:
+				self.matrix.set_row(i, self.matrix.get_row(i - 1))
+
+	def __is_row_full(self, row_num):
+		"""
+		Checks if given row is fully occupied (there is no empty space)
+		:param row_num: index of row to check
+		:return: True - row is fully occupied / False - row isn't fully occupied
+		"""
+
+		is_row_occupied = True
+		for x in range(self.WIDTH):
+			if self.matrix.get(x, row_num) == 0:
+				is_row_occupied = False
+				break
+
+		return is_row_occupied
 
 	def __place_tetromino(self, tetromino: Tetromino, x_position):
 		"""
 		Takes first row in which tetromino can be placed and adds it to the board
+
 		:param tetromino: Tetromino object which should be placed
 		:param x_position: position of tetromino's left coordinate
 		:return:
@@ -220,37 +145,38 @@ class GameController:
 				if tetromino.get(x, y) != 0:  # if it's not empty place it on board
 					board_x = x_position + x
 					board_y = first_empty_row - (tetromino.height - 1) + y
-					self.board.set(board_x, board_y, tetromino.get(x, y))
+					self.matrix.set(board_x, board_y, tetromino.get(x, y))
 
 	def __get_first_empty_row(self, tetromino: Tetromino, x_position):
 		"""
 		Returns index of first empty row (first row in which tetromino can be placed)
+
 		:param tetromino: given Tetromino
 		:param x_position: position of tetromino's left coordinate
 		:return: index of first row in which tetromino can be placed
 		"""
 
 		first_non_empty_row = 0
-		columns = self.board.get_columns(x_position, x_position + tetromino.width)
+		columns: TwoDimArray = self.matrix.get_columns(x_position, x_position + tetromino.width)
 
 		can_move: bool = True
-		while (first_non_empty_row < self.board.height) and can_move:  # we iterate through columns from top to bottom
+		while (first_non_empty_row < self.HEIGHT) and can_move:  # we iterate through columns from top to bottom
 
 			if columns.is_row_empty(first_non_empty_row):  # if current row is empty go row below
-				if can_move and (first_non_empty_row + 1 <= self.board.height):
+				if can_move and (first_non_empty_row + 1 <= self.HEIGHT):
 					first_non_empty_row += 1
 					continue
 				else:
 					break
-			elif self.board.is_row_fully_occupied(first_non_empty_row):
+			elif self.__is_row_full(first_non_empty_row):
 				break
 
 			for y in range((tetromino.height - 1), -1, -1):  # iterate through tetromino from bottom to top
-				if not can_move or not (first_non_empty_row < self.board.height):
+				if not can_move or not (first_non_empty_row < self.HEIGHT):
 					break
 
 				for x in range(tetromino.width):  # iterate through tetromino from left to right
-					if not can_move or not (first_non_empty_row < self.board.height):
+					if not can_move or not (first_non_empty_row < self.HEIGHT):
 						break
 
 					if tetromino.get(x, y) == 0:
@@ -261,12 +187,12 @@ class GameController:
 						else:
 							can_move = False
 
-				if can_move and (first_non_empty_row + 1 <= self.board.height):
+				if can_move and (first_non_empty_row + 1 <= self.HEIGHT):
 					first_non_empty_row += 1  # add one row since we are moving one up
 				else:
 					break
 
-			if can_move and (first_non_empty_row + 1 <= self.board.height):
+			if can_move and (first_non_empty_row + 1 <= self.HEIGHT):
 				first_non_empty_row += 1
 			else:
 				break
