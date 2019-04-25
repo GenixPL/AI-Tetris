@@ -1,7 +1,9 @@
+import json
 import os
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) + '\\'
-LOGS_DIR = os.path.dirname(os.path.abspath(__file__)) + '\\logs' + '\\'
+LOGS_DIR = ROOT_DIR + 'logs\\'
+CONF_FILE = ROOT_DIR + 'config.json'
 
 
 def does_file_exist(path):
@@ -21,3 +23,16 @@ def read_from_file(path):
 
 	return data
 
+
+def get_mutations_from_config():
+	data = read_from_file(CONF_FILE)
+	conf = json.loads(data)
+
+	return conf['max_num_of_mutations']
+
+
+def get_bots_number_from_config():
+	data = read_from_file(CONF_FILE)
+	conf = json.loads(data)
+
+	return conf['number_of_bots']

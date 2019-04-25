@@ -1,13 +1,12 @@
-from board import Board
-from gene import Gene
-from genes_functions import get_situation
-from tetromino import Tetromino
+from board.board import Board
+from board.tetromino import Tetromino
+from genes.genes import Genes
 
 
 class Game:
 	# TODO: check if new tetromino is not added to non-existing rows (above board)
 
-	def __init__(self, gene: Gene):
+	def __init__(self, gene: Genes):
 		self.board = Board()
 		self.is_game_over = False
 		self.score = 0
@@ -16,19 +15,15 @@ class Game:
 	def play(self):
 		while not self.is_game_over:
 			# get situation of top two rows
-			top_rows = self.board.get_top_two_rows()
-			situation = get_situation(top_rows)
-
-			# get reactions
-			reactions = self.gene.get_reactions(situation)
+			situation = self.board.get_situation()
 
 			# get new tetromino
-			tetromino = Tetromino.get_random()
-			rotations_num = self.gene.get_rotations(reactions, tetromino)
+			tetromino: Tetromino = Tetromino.get_random()
+			rotations_num = self.gene.get_rotation(situation, tetromino.shape_num)
 			tetromino.rotate(times=rotations_num)
 
 			# place tetromino
-			position = self.gene.get_position(reactions, tetromino)
+			position = self.gene.get_position(situation, tetromino.shape_num)
 			self.board.add_tetromino(tetromino, position)
 
 			# remove full rows and add score
@@ -49,4 +44,3 @@ class Game:
 
 	def get_gene(self):
 		return self.gene
-

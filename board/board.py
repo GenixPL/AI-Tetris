@@ -1,6 +1,8 @@
-from tetromino import Tetromino
+from bitstring import BitArray
 from numpy import zeros
-from two_dim_array import TwoDimArray
+
+from board.tetromino import Tetromino
+from board.two_dim_array import TwoDimArray
 
 
 class Board:
@@ -12,18 +14,22 @@ class Board:
 	WIDTH = 10
 	HEIGHT = 20
 
+	#
 	def __init__(self):
 		"""
 		Creates empty matrix with proper width and height
 		"""
+
 		self.matrix = TwoDimArray(self.WIDTH, self.HEIGHT)
 
+	#
 	def remove_full_rows_and_return_count(self):
 		"""
-		Removes full rows and adds empty rows at the top
+		Removes full rows and adds empty rows at the top.
 
 		:return: number of removed rows
 		"""
+
 		removed_rows = 0
 
 		for y in range(self.HEIGHT):
@@ -41,31 +47,6 @@ class Board:
 				removed_rows += 1
 
 		return removed_rows
-
-	def get_top_two_rows(self):
-		"""
-		This method finds first two rows in which tetrominoes occur (looking from top) and returns them
-
-		:return: TwoDimArray object representing first two rows with tetrominoes
-		"""
-
-		top_row = 0
-		has_found = False
-
-		for y in range(self.HEIGHT):
-			for x in range(self.WIDTH):
-				if self.matrix.get(x, y) != 0:
-					top_row = y
-					has_found = True
-					break
-
-			if has_found:
-				break
-
-		if top_row == self.HEIGHT - 1:
-			top_row = self.HEIGHT - 2
-
-		return self.matrix.get_rows(top_row, top_row + 2)
 
 	def is_top_row_empty(self):
 		"""
@@ -101,6 +82,63 @@ class Board:
 
 	def print(self):
 		self.matrix.print()
+
+	def get_situation(self):
+		"""
+		Returns BitArray representing situation in top rows which contain tetrominoes
+
+		rows:
+			0: K L M N O P R S T U
+			1: A B C D E F G H I J
+			   0 1 2 3 4 5 6 7 8 9
+
+		situation:
+			ABCDEFGHIJKLMNOPRSTU
+			- bit array where each letter is 0 if there is no block on board in given place and 1 otherwise
+
+		:return: BitArray representing situation (structured as in example above)
+		"""
+
+		width = self.WIDTH
+		height = 2
+		situation = BitArray(length=(width * height))
+		i = 0  # for simplicity inside loops
+
+		top_rows = self.__get_top_two_rows()
+		for y in range(height - 1, -1, -1):
+			for x in range(width):
+				if top_rows.get(x, y) != 0:
+					situation[i] = 1
+
+				i += 1
+
+		return situation
+
+	#
+	def __get_top_two_rows(self):
+		"""
+		This method finds first two rows in which tetrominoes occur (looking from top) and returns them
+
+		:return: TwoDimArray object representing first two rows with tetrominoes
+		"""
+
+		top_row = 0
+		has_found = False
+
+		for y in range(self.HEIGHT):
+			for x in range(self.WIDTH):
+				if self.matrix.get(x, y) != 0:
+					top_row = y
+					has_found = True
+					break
+
+			if has_found:
+				break
+
+		if top_row == self.HEIGHT - 1:
+			top_row = self.HEIGHT - 2
+
+		return self.matrix.get_rows(top_row, top_row + 2)
 
 	def __remove_row(self, row_num):
 		"""

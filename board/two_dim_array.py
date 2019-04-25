@@ -111,4 +111,3 @@ class TwoDimArray:
 
 		for y in range(self.height):
 			print(str(y) + "\t" + str(self.matrix[y]))
-

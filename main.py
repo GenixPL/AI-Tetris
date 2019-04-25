@@ -1,4 +1,4 @@
-from bot import Bot
+from bots.bot import Bot
 
 BOTS_NUM = 100
 bots = []
@@ -43,4 +43,3 @@ while True:
 	add_new_bots()
 
 	print("best: " + str(bots[0].game.get_score()))
-
