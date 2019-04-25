@@ -39,8 +39,14 @@ class Game:
 			if not self.board.is_top_row_empty():
 				self.is_game_over = True
 
+	def restart(self):
+		self.board = Board()
+		self.is_game_over = False
+		self.score = 0
+
 	def get_score(self):
 		return self.score
 
 	def get_gene(self):
 		return self.gene
+

@@ -81,3 +81,16 @@ class Gene:
 
 	def get_index_for_situation_and_tetromino(self, situation: int, tetromino: int):
 		return (situation * self.situation_bits) + (tetromino * (self.rotations_bits + self.positions_bits))
+
+	def mutate(self):
+		lower_bound = randint(0, self.GENE_LEN)
+		upper_bound = randint(lower_bound, lower_bound+15)
+
+		for i in range(lower_bound, upper_bound):
+			self.gene[i] = not self.gene[i]
+
+	def copy(self):
+		new = Gene()
+		new.gene = self.gene.copy()
+
+		return new
