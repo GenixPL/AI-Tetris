@@ -73,9 +73,8 @@ class Tetromino:
 
 		for i in range(times):
 			self.shape = [[self.shape[y][x] for y in range(self.height)] for x in range(self.width - 1, -1, -1)]
-
-		self.width = len(self.shape[0])
-		self.height = len(self.shape)
+			self.width = len(self.shape[0])
+			self.height = len(self.shape)
 
 	def get(self, pos_x: int, pos_y: int):
 		"""

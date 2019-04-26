@@ -22,17 +22,19 @@ class Game:
 			rotations_num = self.gene.get_rotation(situation, tetromino.shape_num)
 			tetromino.rotate(times=rotations_num)
 
+			# check if last row is empty and end if not
+			if not self.board.can_place_next_tetromino(tetromino):
+				self.is_game_over = True
+				break
+
 			# place tetromino
 			position = self.gene.get_position(situation, tetromino.shape_num)
 			self.board.add_tetromino(tetromino, position)
 
 			# remove full rows and add score
 			removed_count = self.board.remove_full_rows_and_return_count()
-			self.score += removed_count
-
-			# check if last row is empty and end if not
-			if not self.board.is_top_row_empty():
-				self.is_game_over = True
+			self.score += removed_count * 100  # give 100 pts for each row
+			self.score += 1  # give one score for each dropped tetromino
 
 	def restart(self):
 		self.board = Board()

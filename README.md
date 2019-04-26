@@ -1,0 +1,1 @@
+number of bots should be divisible by 4

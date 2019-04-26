@@ -48,20 +48,10 @@ class Board:
 
 		return removed_rows
 
-	def is_top_row_empty(self):
-		"""
-		Checks if upper (first) row is empty
+	def can_place_next_tetromino(self, tetromino: Tetromino):
+		# TODO: make it better
 
-		:return: True - is empty / False - isn't empty
-		"""
-
-		is_empty = True
-
-		for x in range(self.WIDTH):
-			if self.matrix.get(x, 0) != 0:
-				is_empty = False
-
-		return is_empty
+		return self.__is_top_row_empty()
 
 	def add_tetromino(self, tetromino: Tetromino, x_position):
 		"""
@@ -151,6 +141,21 @@ class Board:
 				self.matrix.set_row(i, zeros(self.WIDTH, dtype=int))
 			else:
 				self.matrix.set_row(i, self.matrix.get_row(i - 1))
+
+	def __is_top_row_empty(self):
+		"""
+		Checks if upper (first) row is empty
+
+		:return: True - is empty / False - isn't empty
+		"""
+
+		is_empty = True
+
+		for x in range(self.WIDTH):
+			if self.matrix.get(x, 0) != 0:
+				is_empty = False
+
+		return is_empty
 
 	def __is_row_full(self, row_num):
 		"""

@@ -36,3 +36,17 @@ def get_bots_number_from_config():
 	conf = json.loads(data)
 
 	return conf['number_of_bots']
+
+
+def get_mutation_chance():
+	data = read_from_file(CONF_FILE)
+	conf = json.loads(data)
+
+	return conf['mutation_chance_percent']
+
+
+def add_to_file(path, data):
+	file = open(file=path, mode='a+')
+	file.write(data)
+	file.close()
+

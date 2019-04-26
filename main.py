@@ -1,45 +1,27 @@
-from bots.bot import Bot
-
-BOTS_NUM = 100
-bots = []
+from bots.population import Population
+import file_functions as ff
 
 
-def initialize():
-	for i in range(BOTS_NUM):
-		bots.append(Bot())
+# TODO: reduce bot creation time
 
-
-def play():
-	for i in range(BOTS_NUM):
-		bots[i].examine()
-
-
-def sort_bots():
-	bots.sort(key=lambda x: x.game.get_score(), reverse=True)
-
-
-def remove_worst():
-	del bots[50:-1]
-
-
-def reset_bots():
-	for i in range(50):
-		bots[i].prepare()
-
-
-def add_new_bots():
-	for i in range(50):
-		bots.append(bots[0].get_mutated())
-
+log_file = ff.LOGS_DIR + "log1.txt"
+best_file = ff.LOGS_DIR + "best1.txt"
 
 # START
-initialize()
+print("init starts")
+population = Population()
+print("init done")
 
+i = 0
 while True:
-	play()
-	sort_bots()
-	remove_worst()
-	reset_bots()
-	add_new_bots()
+	population.examine()
+	population.reduce()
+	population.reset()
+	population.reproduce()
+	population.mutate()
 
-	print("best: " + str(bots[0].game.get_score()))
+	msg = "iteration: " + str(i) + " best: " + str(population.get_best_score()) + "\n"
+	print(msg)
+	ff.add_to_file(log_file, msg)
+	ff.write_to_file(best_file, population.get_best_gene().chromosomes.hex)
+	i += 1

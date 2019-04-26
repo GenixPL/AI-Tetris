@@ -28,9 +28,18 @@ class Bot:
 	def __init__(self):
 		self.gene: Genes = Genes.get_random()
 		self.game: Game = Game(self.gene)
+		self.prev_score = 0
 
 	def examine(self):
 		self.game.play()
+		self.prev_score = self.game.get_score()
 
-	def prepare(self):
+	def reset(self):
 		self.game.restart()
+
+	def mutate(self):
+		self.gene.mutate()
+
+	def get_score(self):
+		return self.prev_score
+
