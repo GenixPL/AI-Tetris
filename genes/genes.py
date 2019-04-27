@@ -46,6 +46,9 @@ class Genes:
 	# length of the whole chromosome
 	CHROMOSOME_LEN: int = SITUATION_BITS_LEN * SITUATIONS_NUM
 
+	# used to init random chromosome
+	MAX_INT_REPRESENTING_CHROMOSOME = (2 ** (SITUATIONS_NUM * SITUATION_BITS_LEN)) - 1
+
 	#
 	@classmethod
 	def get_random(cls):
@@ -56,8 +59,7 @@ class Genes:
 		"""
 
 		new = Genes()
-		max_int_representing_chromosome = (2 ** (cls.SITUATIONS_NUM * cls.SITUATION_BITS_LEN)) - 1
-		init = randint(0, max_int_representing_chromosome)
+		init = randint(0, cls.MAX_INT_REPRESENTING_CHROMOSOME)
 		new.chromosomes = BitArray(uint=init, length=cls.CHROMOSOME_LEN)
 
 		return new
