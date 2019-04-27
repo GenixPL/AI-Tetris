@@ -1,5 +1,5 @@
 {
-  "max_num_of_mutations": 10,
-  "number_of_bots": 60,
-  "mutation_chance_percent": 5
+  "max_num_of_mutations": 15000,
+  "number_of_bots": 16,
+  "mutation_chance_percent": 15
 }

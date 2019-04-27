@@ -43,3 +43,9 @@ class Bot:
 	def get_score(self):
 		return self.prev_score
 
+	def copy(self):
+		new = Bot()
+		new.gene = self.gene
+
+		return new
+

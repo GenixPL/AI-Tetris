@@ -139,8 +139,8 @@ class Genes:
 		mutations_num = randint(0, max_mutations_num)
 
 		for i in range(mutations_num):
-			self.__mutate_rotation(Genes.__get_situation_from_number(randint(0, self.SITUATIONS_NUM)))
-			self.__mutate_position(Genes.__get_situation_from_number(randint(0, self.SITUATIONS_NUM)))
+			self.__mutate_rotation(Genes.__get_situation_from_number(randint(0, self.SITUATIONS_NUM - 1)))
+			self.__mutate_position(Genes.__get_situation_from_number(randint(0, self.SITUATIONS_NUM - 1)))
 
 	#
 	@staticmethod
