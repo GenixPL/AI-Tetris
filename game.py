@@ -1,5 +1,6 @@
 from board.board import Board
 from board.tetromino import Tetromino
+from board.tetromino_spawner import TetrominoSpawner
 from genes.genes import Genes
 
 
@@ -8,6 +9,7 @@ class Game:
 
 	def __init__(self, gene: Genes):
 		self.board = Board()
+		self.tetromino_spawner = TetrominoSpawner()
 		self.is_game_over = False
 		self.score = 0
 		self.gene = gene
@@ -23,7 +25,7 @@ class Game:
 			# print(situation.bin)
 
 			# get new tetromino
-			tetromino: Tetromino = Tetromino.get_random()
+			tetromino: Tetromino = self.tetromino_spawner.spawn()
 			rotations_num = self.gene.get_rotation(situation, tetromino.shape_num)
 			tetromino.rotate(times=rotations_num)
 
@@ -51,6 +53,7 @@ class Game:
 
 	def restart(self):
 		self.board = Board()
+		self.tetromino_spawner = TetrominoSpawner()
 		self.is_game_over = False
 		self.score = 0
 

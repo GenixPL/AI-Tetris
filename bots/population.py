@@ -1,7 +1,8 @@
-from bots.bot import Bot
-from file_functions import get_bots_number_from_config, get_mutation_chance
 from random import randint
-from board.tetromino import Tetromino
+
+from bots.bot import Bot
+from files.config import get_bots_num, get_mutation_chance
+from files.config import get_keep_only_best
 
 
 class Population:
@@ -10,7 +11,7 @@ class Population:
 	# TODO: add threads
 
 	def __init__(self):
-		self.bots_num = get_bots_number_from_config()
+		self.bots_num = get_bots_num()
 		self.bots = []
 
 		for i in range(self.bots_num):
@@ -19,8 +20,6 @@ class Population:
 	#
 	def examine(self):
 		for i in range(len(self.bots)):
-			# TODO:
-			Tetromino.i = 0
 			self.bots[i].examine()
 
 	def get_best_score(self):
@@ -31,30 +30,38 @@ class Population:
 
 	def reduce(self):
 		self.__sort_bots()
-		# del self.bots[int((len(self.bots) / 2)):]  # TODO: make it better
-		del self.bots[1:]  # 2nd version
+
+		if get_keep_only_best():
+			del self.bots[1:]
+		else:
+			del self.bots[int((len(self.bots) / 2)):]
 
 	def reproduce(self):
-		# TODO: make it better
+		if get_keep_only_best():
+			for i in range(self.bots_num - 1):
+				self.bots.append(self.bots[0].copy())
 
-		# starting_bots_num = len(self.bots)
-		# for i in range(int(starting_bots_num / 2)):
-		# 	self.bots.append(Bot.create_child(self.bots[i * 2], self.bots[(2 * i) + 1]))
-		# 	self.bots.append(Bot.create_child(self.bots[i * 2], self.bots[(2 * i) + 1]))
+		else:
+			starting_bots_num = len(self.bots)
 
-		for i in range(self.bots_num - 1):  # 2nd version
-			new = self.bots[0].copy()
-			new.mutate()
-
-			self.bots.append(new)
+			for i in range(int(starting_bots_num / 2)):
+				self.bots.append(Bot.create_child(self.bots[i * 2], self.bots[(2 * i) + 1]))
+				self.bots.append(Bot.create_child(self.bots[i * 2], self.bots[(2 * i) + 1]))
 
 	def mutate(self):
 		mutation_chance = get_mutation_chance()
 
-		for i in range(len(self.bots)):
-			r = randint(0, 99)
-			if r < mutation_chance:
-				self.bots[i].mutate()
+		if get_keep_only_best():
+			for i in range(1, len(self.bots)):  # we don't mutate the best in this case
+				r = randint(0, 99)
+				if r < mutation_chance:
+					self.bots[i].mutate()
+
+		else:
+			for i in range(len(self.bots)):
+				r = randint(0, 99)
+				if r < mutation_chance:
+					self.bots[i].mutate()
 
 	def reset(self):
 		for i in range(len(self.bots)):

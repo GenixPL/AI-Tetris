@@ -2,8 +2,8 @@ from random import randint
 
 from bitstring import BitArray
 
-from file_functions import read_from_file, get_mutations_from_config
-
+from files.file_functions import read_from_file
+from files.config import get_mutations_num
 
 class Genes:
 	"""
@@ -135,7 +135,7 @@ class Genes:
 			mutating random rotation and other random position given number of times
 		"""
 
-		max_mutations_num = get_mutations_from_config()
+		max_mutations_num = get_mutations_num()
 		mutations_num = randint(0, max_mutations_num)
 
 		for i in range(mutations_num):

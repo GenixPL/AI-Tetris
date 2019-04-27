@@ -41,8 +41,6 @@ shapes = [  # Define the shapes of the single parts
 
 class Tetromino:
 
-	i = 0
-
 	@classmethod
 	def get_random(cls):
 		"""
@@ -50,9 +48,7 @@ class Tetromino:
 		:return: new Tetromino object with random shape
 		"""
 
-		# num = randint(0, 6)
-		num = cls.i % 7
-		cls.i += 1
+		num = randint(0, 6)
 
 		return Tetromino(num)
 
