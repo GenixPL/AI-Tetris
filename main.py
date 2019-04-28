@@ -1,10 +1,9 @@
 from bots.population import Population
 from files.config import init_new_session, add_log, save_best
 
-# TODO: reduce bot creation time
 # TODO: we can divide chromosome to imaginary e.g. 10 parts and take 5 from one parent and 5 from second
 #  (randomly chosen, this should give us better diversity)
-
+# TODO: init from file
 
 init_new_session()
 
