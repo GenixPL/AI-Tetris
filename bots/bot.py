@@ -1,5 +1,5 @@
 from game import Game
-from genes.genes import Genes
+from bots.genes import Genes
 from random import randint
 
 
@@ -22,6 +22,13 @@ class Bot:
 
 		new.gene.chromosomes.append(first_bot.gene.chromosomes[0:crossover_point])
 		new.gene.chromosomes.append(second_bot.gene.chromosomes[crossover_point:Genes.CHROMOSOME_LEN])
+
+		return new
+
+	@classmethod
+	def from_file(cls, file):
+		new = Bot()
+		new.gene: Genes = Genes.from_file(file)
 
 		return new
 
@@ -48,4 +55,3 @@ class Bot:
 		new.gene = self.gene
 
 		return new
-

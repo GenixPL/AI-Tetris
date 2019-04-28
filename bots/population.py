@@ -1,21 +1,28 @@
 from random import randint
 
 from bots.bot import Bot
-from files.config import get_bots_num, get_mutation_chance
-from files.config import get_keep_only_best
+from files.config import get_bots_num, get_mutation_chance, get_keep_only_best, get_init_from_last, get_prev_best
 
 
 class Population:
 
-	# TODO: init from prev bot
 	# TODO: add threads
 
 	def __init__(self):
 		self.bots_num = get_bots_num()
 		self.bots = []
 
+		should_init_from_last = get_init_from_last()
+		prev_best_file = get_prev_best()
+		prev_best = None
+		if should_init_from_last:
+			prev_best = Bot.from_file(prev_best_file)
+
 		for i in range(self.bots_num):
-			self.bots.append(Bot())
+			if should_init_from_last:
+				self.bots.append(prev_best.copy())
+			else:
+				self.bots.append(Bot())
 
 	#
 	def examine(self):
@@ -69,4 +76,4 @@ class Population:
 
 	#
 	def __sort_bots(self):
-		self.bots.sort(key=lambda x: x.game.get_score(), reverse=True)  # TODO: check it
+		self.bots.sort(key=lambda x: x.game.get_score(), reverse=True)

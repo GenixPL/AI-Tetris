@@ -19,9 +19,9 @@ while True:
 	population.reproduce()
 	population.mutate()
 
-	msg = "iteration: " + str(i) + " best: " + str(population.get_best_score()) + "\n"
+	msg = "\niteration: " + str(i) + " best: " + str(population.get_best_score())
 	print(msg)
 	add_log(msg)
-	save_best(population.get_best_gene().chromosomes.hex)
+	save_best(population.get_best_gene().chromosomes)
 
 	i += 1
