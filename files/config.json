@@ -1,1 +1,1 @@
-{"max_num_of_mutations": 1500, "number_of_bots": 50, "mutation_chance_percent": 10, "log_file_message": "foo", "session_number": 1, "keep_only_best": false, "spawn_random_tetrominoes": true, "init_from_last": false}
+{"max_num_of_mutations": 5000, "number_of_bots": 40, "mutation_chance_percent": 10, "log_file_message": "foo", "session_number": 8, "keep_only_best": true, "spawn_random_tetrominoes": true, "init_from_last": false}

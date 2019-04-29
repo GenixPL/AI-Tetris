@@ -25,3 +25,6 @@ while True:
 	save_best(population.get_best_gene().chromosomes)
 
 	i += 1
+
+	if population.get_best_score() >= 10000000:
+		break
