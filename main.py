@@ -1,21 +1,30 @@
-from board import BoardController
+from bots.population import Population
+from files.config import init_new_session, add_log, save_best
 
-bc = BoardController()
+# TODO: we can divide chromosome to imaginary e.g. 10 parts and take 5 from one parent and 5 from second
+#  (randomly chosen, this should give us better diversity)
+# TODO: init from file
 
-# for x in range(bc.board.width):
-# 	bc.board.set(x, 3, 3)
-#
-# for x in range(bc.board.width):
-# 	# if x == 3:
-# 	# 	continue
-# 	bc.board.set(x, 4, 1)
-#
-# for x in range(bc.board.width):
-# 	if x == 3:
-# 		continue
-# 	bc.board.set(x, 5, 1)
+init_new_session()
 
-# bc.board.print()
+print("init starts")
+population = Population()
+print("init done")
 
-bc.add_tetromino(1, 0, -5)
-bc.board.print()
+i = 0
+while True:
+	population.examine()
+	population.reduce()
+	population.reset()
+	population.reproduce()
+	population.mutate()
+
+	msg = "\niteration: " + str(i) + " best: " + str(population.get_best_score())
+	print(msg)
+	add_log(msg)
+	save_best(population.get_best_gene().chromosomes)
+
+	i += 1
+
+	if population.get_best_score() >= 10000000:
+		break
