@@ -1,5 +1,6 @@
 from bots.population import Population
-from files.config import init_new_session, add_log, save_best
+from files.config import init_new_session, add_log, save_best, get_spawn_random_tetrominoes
+import random
 
 # TODO: we can divide chromosome to imaginary e.g. 10 parts and take 5 from one parent and 5 from second
 #  (randomly chosen, this should give us better diversity)
@@ -13,7 +14,12 @@ print("init done")
 
 i = 0
 while True:
-	population.examine()
+	if get_spawn_random_tetrominoes():
+		population.examine(None)
+	else:
+		tetromino_seq = [random.randint(0, 6) for i in range(500)]
+		population.examine(tetromino_seq.copy())
+
 	population.reduce()
 	population.reset()
 	population.reproduce()

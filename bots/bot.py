@@ -37,8 +37,8 @@ class Bot:
 		self.game: Game = Game(self.gene)
 		self.prev_score = 0
 
-	def examine(self):
-		self.game.play()
+	def examine(self, tetromino_seq):
+		self.game.play(tetromino_seq)
 		self.prev_score = self.game.get_score()
 
 	def reset(self):

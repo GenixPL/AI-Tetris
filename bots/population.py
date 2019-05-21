@@ -25,9 +25,9 @@ class Population:
 				self.bots.append(Bot())
 
 	#
-	def examine(self):
+	def examine(self, tetromino_seq):
 		for i in range(len(self.bots)):
-			self.bots[i].examine()
+			self.bots[i].examine(tetromino_seq)
 
 	def get_best_score(self):
 		return self.bots[0].get_score()

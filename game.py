@@ -14,7 +14,9 @@ class Game:
 		self.score = 0
 		self.gene = gene
 
-	def play(self):
+	def play(self, tetromino_seq):
+		self.tetromino_spawner = TetrominoSpawner(tetromino_seq)
+
 		for i in range(1):  # this range changes the number of times single game is played (more games are better in case of random spawning)
 			self.is_game_over = False  # TODO
 			self.board = Board()

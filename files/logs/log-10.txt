@@ -1,8 +1,0 @@
-{"max_num_of_mutations": 5000, "number_of_bots": 20, "mutation_chance_percent": 10, "log_file_message": "foo", "session_number": 10, "keep_only_best": true, "spawn_random_tetrominoes": false, "init_from_last": false}
-iteration: 0 best: 20051
-iteration: 1 best: 20051
-iteration: 2 best: 30081
-iteration: 3 best: 30081
-iteration: 4 best: 30081
-iteration: 5 best: 30081
-iteration: 6 best: 30081
