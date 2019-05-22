@@ -1,0 +1,14 @@
+{"max_num_of_mutations": 5000, "number_of_bots": 40, "mutation_chance_percent": 10, "log_file_message": "foo", "session_number": 11, "keep_only_best": false, "spawn_mode": 1, "init_from_last": false}
+iteration: 0 best: 27
+iteration: 1 best: 10029
+iteration: 2 best: 29
+iteration: 3 best: 25
+iteration: 4 best: 10024
+iteration: 5 best: 26
+iteration: 6 best: 23
+iteration: 7 best: 21
+iteration: 8 best: 15
+iteration: 9 best: 24
+iteration: 10 best: 20
+iteration: 11 best: 15
+iteration: 12 best: 10024

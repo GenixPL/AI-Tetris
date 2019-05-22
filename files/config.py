@@ -45,11 +45,11 @@ def get_mutation_chance():
 	return conf['mutation_chance_percent']
 
 
-def get_spawn_random_tetrominoes():
+def get_spawn_mode():
 	data = ff.read_from_file(ff.CONF_FILE)
 	conf = json.loads(data)
 
-	return bool(conf['spawn_random_tetrominoes'])
+	return int(conf['spawn_mode'])
 
 
 def get_keep_only_best():
